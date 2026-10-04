@@ -1,0 +1,26 @@
+{
+  "name": "relay-crm-shablonix-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Mock CRM whose Templates tab embeds the Shablonix PDF editor (@shablonix/embed + @shablonix/sdk from npm)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "deploy": "npm run build && wrangler pages deploy --branch main"
+  },
+  "dependencies": {
+    "@shablonix/embed": "^0.1.0",
+    "@shablonix/sdk": "^0.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.2"
+  }
+}

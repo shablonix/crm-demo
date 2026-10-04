@@ -1,0 +1,10 @@
+# Cloudflare Pages project behind https://demo.shablonix.online.
+# The API key is a Pages secret: wrangler pages secret put SHABLONIX_API_KEY --project-name shablonix-crm-demo
+name = "shablonix-crm-demo"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-09-30"
+
+[vars]
+SHABLONIX_API_URL = "https://api.shablonix.online"
+SHABLONIX_INVOICE_TEMPLATE_ID = "cmuqifevv00051e6isevnat64"
+DEMO_ORIGIN = "https://demo.shablonix.online"
