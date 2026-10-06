@@ -35,7 +35,8 @@ export function TemplatesPage() {
 			</header>
 			<p className="lede">
 				Documents Relay sends to your customers. Open one to change its design. Saved changes apply to
-				every invoice straight away.
+				every invoice straight away. This demo is shared: use <strong>Start fresh</strong> in the editor
+				to restore the original design.
 			</p>
 			{error && <p className="alert" role="alert">{error}</p>}
 			{!templates && !error && <p className="muted">Loading templates…</p>}
@@ -70,6 +71,8 @@ function TemplateEditor({ template, onClose }: { template: Template; onClose: ()
 	const [busy, setBusy] = useState(false)
 	const [message, setMessage] = useState<{ text: string; error?: boolean } | null>(null)
 	const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+	// Bumped by "Start fresh" to remount the editor on the reset template.
+	const [generation, setGeneration] = useState(0)
 
 	const sampleFor = (id: string) => invoiceTemplateData(INVOICES.find((invoice) => invoice.id === id)!)
 
@@ -112,7 +115,7 @@ function TemplateEditor({ template, onClose }: { template: Template; onClose: ()
 			editor.current?.destroy()
 			editor.current = null
 		}
-	}, [template.id, template.name])
+	}, [template.id, template.name, generation])
 
 	useEffect(() => {
 		if (pdfUrl) dialog.current?.showModal()
@@ -122,6 +125,21 @@ function TemplateEditor({ template, onClose }: { template: Template; onClose: ()
 		setInvoiceId(id)
 		invoiceRef.current = id
 		editor.current?.load({ sampleData: sampleFor(id) })
+	}
+
+	async function startFresh() {
+		setBusy(true)
+		setReady(false)
+		setMessage({ text: 'Restoring the original invoice design…' })
+		try {
+			await api('/api/reset', {})
+			setGeneration((value) => value + 1)
+			setMessage({ text: 'Back to the original design. Edit away.' })
+		} catch (cause) {
+			setMessage({ text: (cause as Error).message, error: true })
+		} finally {
+			setBusy(false)
+		}
 	}
 
 	function save(preview: boolean) {
@@ -146,6 +164,15 @@ function TemplateEditor({ template, onClose }: { template: Template; onClose: ()
 						))}
 					</select>
 				</label>
+				<button
+					type="button"
+					className="button ghost"
+					disabled={busy}
+					onClick={startFresh}
+					title="Discard every saved change and restore the original invoice design"
+				>
+					Start fresh
+				</button>
 				<button type="button" className="button ghost" disabled={!ready || busy} onClick={() => save(false)}>Save</button>
 				<button type="button" className="button" disabled={!ready || busy} onClick={() => save(true)}>Save &amp; preview PDF</button>
 			</header>

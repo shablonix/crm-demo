@@ -9,6 +9,7 @@ export type Env = {
 	SHABLONIX_API_KEY?: string
 	SHABLONIX_API_URL?: string
 	SHABLONIX_INVOICE_TEMPLATE_ID?: string
+	SHABLONIX_STARTER_ID?: string
 	DEMO_ORIGIN?: string
 }
 
@@ -47,6 +48,24 @@ export async function handleApi(request: Request, env: Env): Promise<Response | 
 			if (!origin) return json(400, { message: 'Set DEMO_ORIGIN to the public URL of this demo' })
 			const session = await shablonix.createEmbedSession({ origin, templateId, userId: 'relay-crm-operator' })
 			return json(201, { url: session.url, kind: session.kind })
+		}
+
+		// "Start fresh": put the shared invoice template back to its starter design.
+		// Both ids come from server config, so visitors cannot reset anything else.
+		if (request.method === 'POST' && url.pathname === '/api/reset') {
+			const templateId = env.SHABLONIX_INVOICE_TEMPLATE_ID
+			const starterId = env.SHABLONIX_STARTER_ID
+			if (!templateId || !starterId) return json(500, { message: 'Set SHABLONIX_INVOICE_TEMPLATE_ID and SHABLONIX_STARTER_ID' })
+			const response = await fetch(`${apiUrl}/v1/templates/${templateId}/reset`, {
+				method: 'POST',
+				headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+				body: JSON.stringify({ starterId }),
+			})
+			if (!response.ok) {
+				const body = (await response.json().catch(() => ({}))) as { message?: string }
+				return json(response.status, { message: body.message || 'Reset failed' })
+			}
+			return json(200, { templateId })
 		}
 
 		const route = url.pathname.match(/^\/api\/invoices\/([A-Za-z0-9-]+)\/pdf$/)

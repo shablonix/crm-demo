@@ -32,7 +32,9 @@ browser ── /api/templates ──────► api.ts ── GET /v1/templa
 - The PDF route takes only an invoice id. The server looks the record up, so the
   public demo cannot render arbitrary data.
 - Save in the editor overwrites the shared template. Every prospect edits the same
-  invoice. Restore it from the template's version history in the Shablonix editor.
+  invoice. **Start fresh** in the editor toolbar calls `/api/reset`, which resets the
+  template to the system starter `SHABLONIX_STARTER_ID` (`POST /v1/templates/{id}/reset`).
+  A checkpoint of the previous design is kept in the template's version history.
 
 ## Run locally
 

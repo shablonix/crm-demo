@@ -7,4 +7,5 @@ compatibility_date = "2026-09-30"
 [vars]
 SHABLONIX_API_URL = "https://api.shablonix.online"
 SHABLONIX_INVOICE_TEMPLATE_ID = "cmuqifevv00051e6isevnat64"
+SHABLONIX_STARTER_ID = "starter-meridian"
 DEMO_ORIGIN = "https://demo.shablonix.online"
