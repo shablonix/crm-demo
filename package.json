@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "deploy": "npm run build && wrangler pages deploy --branch main"
+    "deploy": "tsc --noEmit && vite build && wrangler pages deploy --branch main"
   },
   "dependencies": {
     "@shablonix/embed": "^0.1.0",
@@ -21,6 +21,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typescript": "^6.0.3",
-    "vite": "^8.3.2"
+    "vite": "^8.3.2",
+    "wrangler": "^4.147.0"
   }
 }

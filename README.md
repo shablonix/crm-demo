@@ -49,7 +49,7 @@ Leave `DEMO_ORIGIN` empty locally; the iframe is then locked to the request orig
 ## Deploy
 
 ```bash
-npm run deploy              # vite build + wrangler pages deploy (wrangler.toml)
+pnpm run deploy             # typecheck, vite build, wrangler pages deploy (wrangler.toml)
 ```
 
 Non-secret settings are in `wrangler.toml`. The API key is a Pages secret:
